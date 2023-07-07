@@ -1,38 +1,31 @@
 package com.afishing;
 
 import com.afishing.reggie.ReggieApplication;
-import com.afishing.reggie.entity.Employee;
-import com.afishing.reggie.mapper.EmployeeMapper;
-import lombok.Data;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
-import java.security.Security;
-import java.util.Date;
-import java.util.function.Function;
 
 @SpringBootTest(classes = ReggieApplication.class)
 public class MyTest {
-    @Value("${reggie.path}")
-    private String basePath;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Test
-    void testHello(){
-        System.out.println("hello");
+    void testHello() {
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        valueOperations.set("city","wuhan");
     }
 
     @Test
-    void test2(){
-        System.out.println();
-    }
-
-    @Test
-    void test03(){
-        System.out.println(basePath);
-
+    void testHash(){
+        HashOperations hashOperations = redisTemplate.opsForHash();
+        String city = (String) hashOperations.get("001", "city");
+        System.out.println(city);
     }
 
 }
